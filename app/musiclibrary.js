@@ -335,22 +335,23 @@ CoreMusicLibrary.prototype.search = function(data) {
             }
 		}
 
-        libQ.all(deferArray)
+		libQ.all(deferArray)
             .then(function (result) {
+
+                var searchResult={
+                    "navigation": {
+                        "lists": []
+                    }
+                };
+
+
                 for(var i in result)
                 {
                     if(result[i]!== undefined && result[i]!==null)
-                        searcharray = searcharray.concat(result[i]);
+                        searchResult.navigation.lists=searchResult.navigation.lists.concat(result[i]);
                 }
 
-                defer.resolve({
-                    navigation: {
-                        prev: {
-                            uri: '/'
-                        },
-                        list: searcharray
-                    }
-                });
+                defer.resolve(searchResult);
             })
             .fail(function (err) {
                 console.log('Search error in Plugin: '+source.plugin_name+". Details: "+err);
@@ -407,3 +408,8 @@ CoreMusicLibrary.prototype.updateBrowseSourcesLang = function() {
 
 }
 
+CoreMusicLibrary.prototype.goto=function(data){
+    var response = this.commandRouter.executeOnPlugin('music_service','mpd','goto',data);
+    return response;
+
+}

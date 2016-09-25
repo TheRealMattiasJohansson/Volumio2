@@ -557,7 +557,7 @@ function InterfaceWebUI(context) {
 			connWebSocket.on('goTo', function (data) {
 				var selfConnWebSocket = this;
 
-				var returnedData = self.musicLibrary.search(data);
+				var returnedData = self.musicLibrary.goto(data);
 				returnedData.then(function (result) {
 					selfConnWebSocket.emit('pushBrowseLibrary', result);
 				});
@@ -1681,8 +1681,7 @@ InterfaceWebUI.prototype.printConsoleMessage = function (message) {
 InterfaceWebUI.prototype.pushQueue = function (queue, connWebSocket) {
 	var self = this;
 	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'InterfaceWebUI::pushQueue');
-
-    self.logger.info(JSON.stringify(queue));
+	
 	// If a specific client is given, push to just that client
 	if (connWebSocket) {
 		return libQ.fcall(connWebSocket.emit.bind(connWebSocket), 'pushQueue', queue);
